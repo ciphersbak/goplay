@@ -1,7 +1,10 @@
+// [START declaration]
 syntax="proto3";
 
 package main;
+// [END declaration]
 
+// [START messages]
 message Person {
     string name = 1;
     int32 age = 2;
@@ -12,3 +15,4 @@ message AddressBook {
     // repeated Person people = 1;
     Person person = 1;
 }
+// [END messages]
