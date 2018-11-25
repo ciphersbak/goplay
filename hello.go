@@ -15,24 +15,35 @@ func main() {
 	// 	Age:   35,
 	// 	Email: "abc@abc.com",
 	// }
-	addressBook := &AddressBook{}
+	// addressBook := &AddressBook{}
+	person := &Person{
+		Name:  "Prashant",
+		Age:   35,
+		Email: "abc@abc.com",
+	}
 
 	// data, err := proto.Marshal(prashant)
-	data, err := proto.Marshal(addressBook)
+	// data, err := proto.Marshal(addressBook)
+	data, err := proto.Marshal(person)
 	if err != nil {
-		log.Fatal("Marshalling error: ", err)
+		log.Fatalln("Marshalling error: ", err)
 	}
 	fmt.Println("Printing data: ", data)
 
 	// newPrashant := &Person{}
 	// err = proto.Unmarshal(data, newPrashant)
-	newAddressBook := &AddressBook{}
-	err = proto.Unmarshal(data, newAddressBook)
+	// newAddressBook := &AddressBook{}
+	newPerson := &Person{}
+	// err = proto.Unmarshal(data, newAddressBook)
+	err = proto.Unmarshal(data, newPerson)
 	if err != nil {
-		log.Fatal("Unmarshalling error: ", err)
+		log.Fatalln("Unmarshalling error: ", err)
 	}
 	// fmt.Println(newPrashant.GetAge())
 	// fmt.Println(newPrashant.GetName())
 	// fmt.Println(newPrashant.GetEmail())
-	fmt.Println("Print after Unmarshall: ", newAddressBook.GetPerson())
+	// fmt.Println("Print after Unmarshall: ", newAddressBook.GetPerson())
+	fmt.Println("Print after unmarshall: ", newPerson.GetEmail())
+	fmt.Println("Print after unmarshall: ", newPerson.GetAge())
+	fmt.Println("Print after unmarshall: ", newPerson.GetName())
 }
