@@ -16,15 +16,17 @@ func main() {
 	// 	Email: "abc@abc.com",
 	// }
 	// addressBook := &AddressBook{}
-	person := &Person{
-		Name:  "Prashant",
-		Age:   35,
-		Email: "abc@abc.com",
+	var addressBook *AddressBook
+	addressBook = nil
+	addressBook = &AddressBook{
+		Person: &Person{
+			Name:  "Prashant",
+			Age:   35,
+			Email: "abc@abc.com",
+		},
 	}
-
 	// data, err := proto.Marshal(prashant)
-	// data, err := proto.Marshal(addressBook)
-	data, err := proto.Marshal(person)
+	data, err := proto.Marshal(addressBook)
 	if err != nil {
 		log.Fatalln("Marshalling error: ", err)
 	}
@@ -32,10 +34,9 @@ func main() {
 
 	// newPrashant := &Person{}
 	// err = proto.Unmarshal(data, newPrashant)
-	// newAddressBook := &AddressBook{}
-	newPerson := &Person{}
-	// err = proto.Unmarshal(data, newAddressBook)
-	err = proto.Unmarshal(data, newPerson)
+	newAddressBook := &AddressBook{}
+	err = proto.Unmarshal(data, newAddressBook)
+	// err = proto.Unmarshal(data, newPerson)
 	if err != nil {
 		log.Fatalln("Unmarshalling error: ", err)
 	}
@@ -43,7 +44,7 @@ func main() {
 	// fmt.Println(newPrashant.GetName())
 	// fmt.Println(newPrashant.GetEmail())
 	// fmt.Println("Print after Unmarshall: ", newAddressBook.GetPerson())
-	fmt.Println("Print after unmarshall: ", newPerson.GetEmail())
-	fmt.Println("Print after unmarshall: ", newPerson.GetAge())
-	fmt.Println("Print after unmarshall: ", newPerson.GetName())
+	fmt.Println("Print after Unmarshall: ", newAddressBook.GetPerson().GetName())
+	fmt.Println("Print after Unmarshall: ", newAddressBook.GetPerson().GetAge())
+	fmt.Println("Print after Unmarshall: ", newAddressBook.GetPerson().GetEmail())
 }
