@@ -35,8 +35,7 @@ func main() {
 	// newPrashant := &Person{}
 	// err = proto.Unmarshal(data, newPrashant)
 	newAddressBook := &AddressBook{}
-	err = proto.Unmarshal(data, newAddressBook)
-	// err = proto.Unmarshal(data, newPerson)
+	err = proto.Unmarshal(data, newAddressBook)	
 	if err != nil {
 		log.Fatalln("Unmarshalling error: ", err)
 	}
