@@ -1,0 +1,38 @@
+// [START declaration]
+syntax="proto3";
+
+package main;
+// [END declaration]
+
+enum AddressType {
+    Home = 0; //First value in enum should always be zero for backward compatibility
+    Work = 1;
+    Leased = 2;
+}
+
+// [START messages]
+message Address {
+    string addressLine1 = 1; //House #, Building #
+    string addressLine2 = 2; //Optional info
+    string city =3;
+    string state = 4;
+    string zip = 5;
+}
+
+message Property {
+    string propertyName = 1;
+    Holder holder = 2; //Current owner
+    int32 price = 3;
+    string location = 4; // Geo-location Lat/Long as string
+    Address Address = 5;
+}
+
+message Holder {
+    string firstName = 1;
+    string lastName = 2;
+    string middleName = 3;
+    Address Address = 4;
+    string emailId = 5;
+    int32 phone = 6;
+}
+// [END messages]
