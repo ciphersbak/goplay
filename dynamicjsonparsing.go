@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	url := "https://ipinfo.io/?token=YOUR_TOKEN"
+	url := "https://ipinfo.io/?token=9acfb367e2154c"
 	method := "GET"
 	client := &http.Client{}
 
@@ -32,12 +32,23 @@ func main() {
 		return
 	}
 	// fmt.Println(string(body))
-	data := map[string]interface{}{}
+	var data map[string]interface{}
+	// data := map[string]interface{}{}
 	err = json.Unmarshal(body, &data)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	fmt.Println(data)
+	for k, v := range data {
+		switch c := v.(type) {
+		case string:
+			fmt.Printf("Item %q is a string, containing %q\n", k, c)
+		case float64:
+			fmt.Printf("Looks like item %q is a number, specifically %f\n", k, c)
+		default:
+			fmt.Printf("Not sure what type item %q is, but I think it might be %T\n", k, c)
+		}
+	}
 
 }
