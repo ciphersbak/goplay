@@ -12,7 +12,7 @@ func main() {
 	url := "https://ipinfo.io/?token=YOUR_TOKEN"
 	method := "GET"
 	client := &http.Client{}
-
+	// https://bitfieldconsulting.com/golang/map-iteration
 	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
 		fmt.Println(err)
