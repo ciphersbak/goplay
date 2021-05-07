@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	url := "https://ipinfo.io/?token=9acfb367e2154c"
+	url := "https://ipinfo.io/?token=YOUR_TOKEN"
 	method := "GET"
 	client := &http.Client{}
 
