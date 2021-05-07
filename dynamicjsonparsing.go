@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"sort"
 )
 
 func main() {
-	url := "https://ipinfo.io/?token=YOUR_TOKEN"
+	url := "https://ipinfo.io/?token=9acfb367e2154c"
 	method := "GET"
 	client := &http.Client{}
 
@@ -50,5 +51,30 @@ func main() {
 			fmt.Printf("Not sure what type item %q is, but I think it might be %T\n", k, c)
 		}
 	}
-
+	value, ok := data["ip"]
+	if ok {
+		fmt.Printf("Yes, IP has a value and it is %q\n", value)
+	}
+	// list all kvp
+	for key, value := range data {
+		fmt.Println(key, value)
+	}
+	// list only key
+	for key := range data {
+		fmt.Println(key)
+	}
+	// list only value
+	for _, value := range data {
+		fmt.Println(value)
+	}
+	// store keys and iterate alphabetically
+	var keys []string
+	for key := range data {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	fmt.Println("In alphabetical order")
+	for _, value := range keys {
+		fmt.Println(value, data[value])
+	}
 }
