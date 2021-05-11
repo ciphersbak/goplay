@@ -14,25 +14,37 @@ func main() {
 	waitGroup.Add(3)
 	start := time.Now()
 	go func() {
-		for i := 0; i < 3; i++ {
-			fmt.Println(i)
-		}
+		stIteration()
 		waitGroup.Done()
 	}()
 	go func() {
-		for i := 0; i < 3; i++ {
-			fmt.Println(i)
-		}
+		ndIteration()
 		waitGroup.Done()
 	}()
 	go func() {
-		for i := 0; i < 3; i++ {
-			fmt.Println(i)
-		}
+		rdIteration()
 		waitGroup.Done()
 	}()
 	waitGroup.Wait()
 	elapsedTime := time.Since(start)
 	fmt.Println("Total Time for Execution: " + elapsedTime.String())
 	time.Sleep(time.Second)
+}
+
+func stIteration() {
+	for i := 0; i < 3; i++ {
+		fmt.Println(i)
+	}
+}
+
+func ndIteration() {
+	for i := 0; i < 3; i++ {
+		fmt.Println(i)
+	}
+}
+
+func rdIteration() {
+	for i := 0; i < 3; i++ {
+		fmt.Println(i)
+	}
 }
