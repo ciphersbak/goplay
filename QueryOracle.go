@@ -92,7 +92,7 @@ func queryDBName() {
 func queryPSRoles() {
 	rows, err := db.Query("select rolename from psroleuser where roleuser = 'VP1'")
 	if err != nil {
-		fmt.Println("Error running OS query")
+		fmt.Println("Error running PS query")
 		fmt.Println(err)
 		return
 	}
