@@ -49,22 +49,18 @@ func main() {
 		queryDate()
 		waitGroup.Done()
 	}()
-
 	go func() {
 		queryDBName()
 		waitGroup.Done()
 	}()
-
 	go func() {
 		queryPSRoles()
 		waitGroup.Done()
 	}()
-
 	go func() {
 		queryPSOPRDEFN()
 		waitGroup.Done()
 	}()
-
 	waitGroup.Wait()
 	defer db.Close()
 	elapsedTime := time.Since(start)
