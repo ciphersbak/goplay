@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"os"
 	"sync"
 	"time"
 
@@ -18,23 +19,28 @@ type rolename struct {
 func InitDB() {
 	var err error
 
-	db, err = sql.Open("godror", `user="UserID" password="pwd" connectString="SERVER:1521/SERVICENAME"`)
+	db, err = sql.Open("godror", `user="UserID" password="pswd" connectString="SERVERNAME:1521/SERVICENAME"`)
 	if err != nil {
 		fmt.Println(err)
 	}
 	// defer db.Close()
+	if err = db.Ping(); err != nil {
+		fmt.Printf("Error connecting to the database: %s\n", err)
+		return
+	}
 }
 
 func check(e error, name string) {
 	if e != nil {
 		fmt.Println("Error in function: " + name)
+		return
 	}
 }
 
 func main() {
 
 	var waitGroup sync.WaitGroup
-	waitGroup.Add(3)
+	waitGroup.Add(4)
 	fmt.Println("Starting sync calls...")
 	start := time.Now()
 	InitDB()
@@ -51,6 +57,11 @@ func main() {
 
 	go func() {
 		queryPSRoles()
+		waitGroup.Done()
+	}()
+
+	go func() {
+		queryPSOPRDEFN()
 		waitGroup.Done()
 	}()
 
@@ -83,11 +94,12 @@ func queryDBName() {
 
 	rows, err := db.Query("select ora_database_name from dual")
 	if err != nil {
-		// fmt.Println("Error running DBName query")
-		// fmt.Println(err)
-		check(err, "queryDBName")
+		fmt.Println("Error running DBName query")
+		fmt.Println(err)
+		// check(err, "queryDBName")
 		return
 	}
+	// check(err, "queryDBName")
 	defer rows.Close()
 
 	var dbname string
@@ -116,5 +128,32 @@ func queryPSRoles() {
 		}
 		// fmt.Printf("The role names are: %s\n", role)
 		roles = append(roles, role)
+	}
+}
+
+func writeToFile(filename string, data string) {
+	file, err := os.Create(filename)
+	check(err, "writeToFile")
+	defer file.Close()
+}
+
+func queryPSOPRDEFN() {
+	dbQUERY, err := db.Prepare("select operpswd, operpswdsalt from psoprdefn where oprid = :1")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer dbQUERY.Close()
+	rows, err := dbQUERY.Query("VP1")
+	if err != nil {
+		fmt.Println("Error processing PSOPRDEFN query")
+		fmt.Println(err)
+		return
+	}
+	defer rows.Close()
+	var operPSWD, operPSWDSALT string
+	for rows.Next() {
+		rows.Scan(&operPSWD, &operPSWDSALT)
+		fmt.Println(operPSWD, operPSWDSALT)
 	}
 }
