@@ -154,6 +154,6 @@ func queryPSOPRDEFN() {
 	var operPSWD, operPSWDSALT string
 	for rows.Next() {
 		rows.Scan(&operPSWD, &operPSWDSALT)
-		fmt.Println(operPSWD, operPSWDSALT)
+		fmt.Println("Hashed password: " + operPSWD + " <> SALT password " + operPSWDSALT)
 	}
 }
