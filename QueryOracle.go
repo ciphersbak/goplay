@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
 	"sync"
 	"time"
@@ -19,7 +20,7 @@ type rolename struct {
 func InitDB() {
 	var err error
 
-	db, err = sql.Open("godror", `user="UserID" password="pswd" connectString="SERVERNAME:1521/SERVICENAME"`)
+	db, err = sql.Open("godror", `user="UserID" password="PWD" connectString="SERVERNAME:1521/SERVICENAME"`)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -106,7 +107,7 @@ func queryDBName() {
 }
 
 func queryPSRoles() {
-	rows, err := db.Query("select rolename from psroleuser where roleuser = 'VP1'")
+	rows, err := db.Query("select rolename from psroleuser where roleuser = 'prashant.atman'")
 	if err != nil {
 		// fmt.Println("Error running PS query")
 		// fmt.Println(err)
@@ -114,6 +115,9 @@ func queryPSRoles() {
 		return
 	}
 	defer rows.Close()
+	t := time.Now()
+	const layout = "2006-01-02_150405.000000000"
+	filename := "Roles_" + t.Format(layout) + ".txt"
 
 	var roles []rolename
 	for rows.Next() {
@@ -125,12 +129,23 @@ func queryPSRoles() {
 		// fmt.Printf("The role names are: %s\n", role)
 		roles = append(roles, role)
 	}
-}
-
-func writeToFile(filename string, data string) {
+	// fmt.Println(roles)
 	file, err := os.Create(filename)
-	check(err, "writeToFile")
+	if err != nil {
+		log.Fatalf("\nFailed creating file: %s", err)
+	}
 	defer file.Close()
+	// datawriter := bufio.NewWriter(file)
+	// for _, data := range roles {
+	// 	_, _ = datawriter.WriteString(data + "\n")
+	// }
+	// datawriter.Flush()
+	len, err := file.WriteString(fmt.Sprintln(roles) + "\n")
+	if err != nil {
+		log.Fatalf("\nFailed writing to file: %s", err)
+	}
+	fmt.Printf("\nFile Name: %s", file.Name())
+	fmt.Printf("\nLength: %d bytes", len)
 }
 
 func queryPSOPRDEFN() {
@@ -140,16 +155,32 @@ func queryPSOPRDEFN() {
 		return
 	}
 	defer dbQUERY.Close()
-	rows, err := dbQUERY.Query("VP1")
+	rows, err := dbQUERY.Query("prashant.atman")
 	if err != nil {
 		fmt.Println("Error processing PSOPRDEFN query")
 		fmt.Println(err)
 		return
 	}
 	defer rows.Close()
+	currentTime := time.Now()
+	const layout = "2006-01-02_150405.000000000"
+	filename := "QueryOP_" + currentTime.Format(layout) + ".txt"
+	// text := "PUT SOMETHING HERE"
+	file, err := os.Create(filename)
+	if err != nil {
+		log.Fatalf("failed creating file: %s", err)
+	}
+	defer file.Close()
 	var operPSWD, operPSWDSALT string
 	for rows.Next() {
 		rows.Scan(&operPSWD, &operPSWDSALT)
-		fmt.Println("Hashed password: " + operPSWD + " <> SALT password " + operPSWDSALT)
+		text := operPSWD + " <:> " + operPSWDSALT
+		_, err := file.WriteString(text)
+		if err != nil {
+			log.Fatalf("failed writing to file: %s", err)
+		}
+		// fmt.Println("Hashed password: " + operPSWD + " <> SALT password " + operPSWDSALT)
 	}
+	fmt.Printf("\nFile Name: %s\n", file.Name())
+	// fmt.Printf("\nLength: %d bytes", len)
 }
